@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reviews demo (works with localStorage)</title>
+  <style>
+    
+
+    body { font-family: Inter, system-ui, Arial; background: #fff6fb; color:#222; padding:20px; }
+    .container { max-width:900px; margin:0 auto; }
+    h1 { color:#e60073; text-align:center; }
+    form { display:flex; flex-direction:column; gap:10px; max-width:700px; margin:12px auto 0; }
+    input[type="text"], textarea {
+      padding:10px; border-radius:8px; border:1px solid #e9cbe0; font-size:1rem;
+      resize:vertical;
+    }
+    button.primary {
+      background:#e60073; color:#fff; border:none; padding:10px 16px; border-radius:24px; cursor:pointer;
+    }
+    .review-list { margin-top:24px; display:flex; flex-direction:column; gap:12px; }
+    .review {
+      background: #fff0f6; padding:14px; border-radius:10px; box-shadow:0 3px 8px rgba(0,0,0,0.06);
+    }
+    .review strong { color:#b00058; display:block; margin-bottom:6px; }
+    .review p { margin:6px 0 10px; }
+    .meta { font-size:0.85rem; color:#666; margin-bottom:8px; }
+    .actions { display:flex; gap:8px; }
+    .actions button { border:none; padding:8px 12px; border-radius:8px; cursor:pointer; }
+    button.reply { background:#fff; border:1px solid #e9cbe0; }
+    button.delete { background:#ffecec; border:1px solid #ffb6c9; color:#8a0010; }
+    .reply { margin-left:18px; padding:10px; background:#ffe6f2; border-left:4px solid #e60073; border-radius:8px; }
+    .no-reviews { text-align:center; color:#777; margin-top:12px; }
+    small.debug { display:block; color:#999; margin-top:10px; text-align:center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Client Reviews</h1>
+
+    <!-- REVIEW FORM -->
+    <form id="reviewForm" aria-label="Submit a review">
+      <input id="name" type="text" placeholder="Your name" required />
+      <textarea id="reviewText" rows="4" placeholder="Write your review..." required></textarea>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button class="primary" type="submit">Submit Review</button>
+        <button type="button" id="clearStorage" style="background:#fff;border:1px solid #e9cbe0;padding:8px 12px;border-radius:8px;cursor:pointer;">Clear all (dev)</button>
+      </div>
+    </form>
+
+    <!-- REVIEW LIST -->
+    <div id="reviewList" class="review-list" aria-live="polite"></div>
+
+    <small class="debug">Open the browser console (F12) to see debug messages.</small>
+  </div>
+
+  <script>
+    // Safe init: run immediately if DOM ready, otherwise wait.
+    function initApp() {
+      // Grab references
+      const form = document.getElementById('reviewForm');
+      const reviewList = document.getElementById('reviewList');
+      const clearBtn = document.getElementById('clearStorage');
+
+      // Defensive check (will log useful error if something's wrong)
+      if (!form || !reviewList) {
+        console.error('Initialization error: required DOM elements missing.', { form, reviewList });
+        // Show a visible message to help debugging
+        if (!reviewList) {
+          const body = document.querySelector('body');
+          const el = document.createElement('div');
+          el.style.background = '#fff2f2';
+          el.style.padding = '10px';
+          el.style.border = '1px solid #ffb6c9';
+          el.style.borderRadius = '8px';
+          el.style.margin = '12px';
+          el.textContent = 'Error: reviewForm or reviewList element not found. Check that your HTML contains elements with id="reviewForm" and id="reviewList".';
+          body.insertBefore(el, body.firstChild);
+        }
+        return;
+      }
+
+      // Load or initialize reviews array
+      let reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+
+      // Utility to persist
+      function save() {
+        localStorage.setItem('reviews', JSON.stringify(reviews));
+      }
+
+      // Format date
+      function formatDate(iso) {
+        try {
+          const d = new Date(iso);
+          return d.toLocaleString();
+        } catch {
+          return iso;
+        }
+      }
+
+      // Render function (newest first)
+      function renderReviews() {
+        reviewList.innerHTML = '';
+        if (!reviews.length) {
+          const no = document.createElement('div');
+          no.className = 'no-reviews';
+          no.textContent = 'No reviews yet — be the first to leave one!';
+          reviewList.appendChild(no);
+          return;
+        }
+
+        // Show newest first
+        const copy = [...reviews].reverse();
+        copy.forEach(review => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'review';
+          wrapper.dataset.id = review.id;
+
+          const who = document.createElement('strong');
+          who.textContent = review.name;
+
+          const meta = document.createElement('div');
+          meta.className = 'meta';
+          meta.textContent = formatDate(review.createdAt);
+
+          const text = document.createElement('p');
+          text.textContent = review.text;
+
+          const actions = document.createElement('div');
+          actions.className = 'actions';
+
+          const replyBtn = document.createElement('button');
+          replyBtn.className = 'reply';
+          replyBtn.type = 'button';
+          replyBtn.textContent = 'Reply';
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'delete';
+          deleteBtn.type = 'button';
+          deleteBtn.textContent = 'Delete';
+
+          actions.appendChild(replyBtn);
+          actions.appendChild(deleteBtn);
+
+          wrapper.appendChild(who);
+          wrapper.appendChild(meta);
+          wrapper.appendChild(text);
+          wrapper.appendChild(actions);
+
+          // Replies container
+          if (Array.isArray(review.replies) && review.replies.length) {
+            review.replies.forEach(r => {
+              const rDiv = document.createElement('div');
+              rDiv.className = 'reply';
+              const rWho = document.createElement('strong');
+              rWho.textContent = 'Owner:';
+              const rText = document.createTextNode(' ' + r);
+              rDiv.appendChild(rWho);
+              rDiv.appendChild(rText);
+              wrapper.appendChild(rDiv);
+            });
+          }
+
+          // Attach event handlers (use review.id to find actual item in reviews array)
+          replyBtn.addEventListener('click', () => {
+            const replyText = prompt('Write your reply:');
+            if (replyText && replyText.trim()) {
+              const idx = reviews.findIndex(x => x.id === review.id);
+              if (idx > -1) {
+                reviews[idx].replies.push(replyText.trim());
+                save();
+                renderReviews();
+              } else {
+                console.warn('Reply failed — review not found by id', review.id);
+              }
+            }
+          });
+
+          deleteBtn.addEventListener('click', () => {
+            if (confirm('Delete this review?')) {
+              reviews = reviews.filter(x => x.id !== review.id);
+              save();
+              renderReviews();
+            }
+          });
+
+          reviewList.appendChild(wrapper);
+        });
+      }
+
+      // Handle form
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const nameInput = document.getElementById('name');
+        const textInput = document.getElementById('reviewText');
+        const name = (nameInput.value || 'Anonymous').trim();
+        const text = (textInput.value || '').trim();
+        if (!text) return alert('Please enter a review.');
+
+        const newReview = {
+          id: Date.now().toString() + '-' + Math.floor(Math.random()*10000),
+          name,
+          text,
+          replies: [],
+          createdAt: new Date().toISOString()
+        };
+
+        reviews.push(newReview);
+        save();
+        form.reset();
+        renderReviews();
+      });
+
+      // Dev helper to clear all reviews
+      clearBtn.addEventListener('click', () => {
+        if (confirm('Clear all reviews from localStorage?')) {
+          localStorage.removeItem('reviews');
+          reviews = [];
+          renderReviews();
+        }
+      });
+
+      // initial render
+      renderReviews();
+      console.log('Reviews module initialized. Found', reviews.length, 'reviews.');
+    }
+
+    // Ensure init runs whether the file is loaded early or late
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elite Nails Studio</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+  
+</head>
+
+
+<body>
+
+  <!-- Header -->
+ <!-- Header -->
+  <div class="falling-letters"></div>
+
+  <header>
+    <h1>GlowUp Nails Studio</h1>
+    <nav style="text-align: center;">
+      <a href="#home">Home</a>
+      <a href="#about us">About us</a>
+      <a href="#services">Services</a>
+      <a href="#booking">Booking</a>
+      <a href="#reviews">Reviews</a>
+       <a href="#gallery">Gallery</a>
+       <a href="#contact">Contact</a>
+    </nav>
+    </header>
+
+
+ <section class="hero" id="home">
+  <h1 class="floating-title">
+    <span class="gold">Elite</span> <span class="pink">Nails</span>
+  </h1>
+  <p>Luxury nail art, manicures, pedicures & treatments tailored to make your hands shine with elegance.</p>
+  <a href="#booking" class="btn">Book Your Appointment</a>
+</section>
+
+
+<section class="about" id="about">
+  <h2>About Us</h2>
+  <p>
+    At <strong>Elite Nails</strong>, we believe that beautiful nails aren’t just 
+    about polish – they’re about self-care, confidence, and style.  
+    Our mission is to provide luxury nail treatments in a relaxing, welcoming environment 
+    where every client feels pampered and valued.
+  </p>
+  <p>
+    With a passion for nail artistry and the latest trends, we specialize in gel nails, custom designs, and nail health treatments.We grow strong and healthy nails using a specialised gel called  <strong>rubber base</strong>.
+    Whether you’re looking for everyday elegance or a bold statement, I'm
+    here to bring your vision to life.
+  </p>
+  <img src="picture.jpg" alt="Our Studio">
+</section>
+
+
+  <!-- Services Section -->
+  <section class="services" id="services">
+    <h2>Our Nail Services</h2>
+    <div class="service-list">
+      <div class="service"  onclick="openGallery('nails')">
+        <img src="WhatsApp Image 2025-09-09 at 11.55.15_bc2d4643.jpg" alt="Manicure">
+        <h3>Classic Manicure</h3>
+        <p>Includes nail shaping, cuticle care, and polish of your choice.</p>
+        <span>From R250</span>
+      </div>
+      
+      <div class="service" onclick="openGallery('acrylic')">
+        <img src="WhatsApp Image 2025-09-09 at 11.57.49_0e09fd19.jpg" alt="Nail Art">
+        <h3>Custom Nail Art</h3>
+        <p>Trendy, creative, and unique designs using high-quality products tailored to your style.</p>
+        <span>From R250</span>
+      </div>
+      
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking Section -->
+<section class="booking" id="booking">
+  <h2>Book an Appointment</h2>
+  <p>Click below to book directly via WhatsApp 👇</p>
+  
+
+  <a class="whatsapp-btn" 
+   href="https://wa.me/27730093182?text=Hi%2C%20I%27d%20like%20to%20book%20a%20manicure%20on%20[date]." 
+   target="_blank">
+   <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+</a>
+</section>
+
+
+  <!-- Reviews Section -->
+<!-- Reviews Section -->
+<section id="reviews">
+  <h2>Client Reviews</h2>
+  <form id="reviewForm">
+    <input id="name" type="text" placeholder="Your name" required />
+    <textarea id="reviewText" rows="4" placeholder="Write your review..." required></textarea>
+    <button type="submit">Submit Review</button>
+  </form>
+  <div id="reviewList"></div>
+  <div class="review-stars">★★★★★</div>
+</section>
+
+
+<!-- Videos Section -->
+<section class="gallery" id="gallery">
+  <h2>Our Work in Action</h2>
+<div id="videoSlider">
+  <video src="WhatsApp Video 2025-09-09 at 11.44.03_bae2b6dc.mp4" muted></video>
+  <video src="WhatsApp Video 2025-09-09 at 11.46.57_fff4b10a.mp4" muted></video>
+  <video src="WhatsApp Video 2025-09-09 at 11.47.17_59f0b8df.mp4" muted></video>
+  <video src="WhatsApp Video 2025-09-09 at 11.48.01_9a1b75a5.mp4" muted></video>
+</div>
+
+
+
+
+
+ <!-- Contact Section -->
+<section class="contact" id="contact">
+  <h2>Contact Us</h2>
+  <p>Connect with us on social media 👇</p>
+
+  <div class="social-links">
+
+    <a class="social-btn instagram" 
+       href="https://www.instagram.com/elite_nails_1?igsh=MWx4amhubDcxOWQ2Yg==" 
+       target="_blank">
+      <i class="fab fa-instagram"></i> Instagram
+    </a>
+
+    <a class="social-btn tiktok"
+       href="https://www.tiktok.com/@elite_nails_1?_r=1&_t=ZS-91QeKQk2oRm"
+       target="_blank">
+      <i class="fab fa-tiktok"></i> TikTok
+    </a>
+
+   
+
+  </div>
+</section>
+
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Elite Nails Studio | Designed with Love by Phindile 💅</p>
+  </footer>
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("reviewForm");
+    const reviewList = document.getElementById("reviewList");
+    let reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+
+    function saveReviews() {
+      localStorage.setItem("reviews", JSON.stringify(reviews));
+    }
+
+    function renderReviews() {
+      reviewList.innerHTML = "";
+      reviews.forEach((r, index) => {
+        const div = document.createElement("div");
+        div.className = "review";
+        div.innerHTML = `
+          <strong>${r.name}</strong>
+          <p>${r.text}</p>
+          ${r.reply ? `<div class="reply"><strong>Owner:</strong> ${r.reply}</div>` : ""}
+          <button class="replyBtn">Reply</button>
+        `;
+
+        // Reply button
+        const replyBtn = div.querySelector(".replyBtn");
+        replyBtn.addEventListener("click", () => {
+          const replyText = prompt("Write your reply:");
+          if (replyText) {
+            reviews[index].reply = replyText;
+            saveReviews();
+            renderReviews();
+          }
+        });
+
+        reviewList.appendChild(div);
+      });
+    }
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim() || "Anonymous";
+      const text = document.getElementById("reviewText").value.trim();
+      if (!text) return;
+      reviews.push({ name, text, reply: null });
+      saveReviews();
+      form.reset();
+      renderReviews();
+    });
+
+    renderReviews();
+  });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.querySelector(".falling-letters");
+  const letters = "ELITE NAILS".split("");
+  
+  function createLetter() {
+    const span = document.createElement("span");
+    span.classList.add("falling-letter");
+    span.textContent = letters[Math.floor(Math.random() * letters.length)];
+    span.style.left = Math.random() * 100 + "vw";
+    span.style.animationDuration = 6 + Math.random() * 6 + "s";
+    span.style.fontSize = 2 + Math.random() * 3 + "rem";
+    container.appendChild(span);
+
+    setTimeout(() => {
+      span.remove();
+    }, 12000);
+  }
+
+  setInterval(createLetter, 400);
+});
+</script>
+<script>
+  const videos = document.querySelectorAll("#videoSlider video");
+  let current = 0;
+
+  function showVideo(index) {
+    videos.forEach(v => v.pause());
+    videos.forEach(v => v.style.display = "none");
+
+    let vid = videos[index];
+    vid.style.display = "block";
+    vid.currentTime = 0;
+    vid.play();
+
+    // Play only first 3 seconds
+    setTimeout(() => {
+      vid.pause();
+      current = (current + 1) % videos.length;
+      showVideo(current);
+    }, 5000);
+  }
+
+  showVideo(current);
+</script>
+<!-- Popup Gallery Modal -->
+<div id="galleryModal" class="gallery-modal">
+  <span class="close-gallery">&times;</span>
+  <div class="gallery-content">
+    <img id="galleryImage" src="" alt="Nail Design">
+  </div>
+  
+  <!-- navigation arrows -->
+  <span class="prev-img">&#10094;</span>
+  <span class="next-img">&#10095;</span>
+</div>
+<script>
+/* --- PUT ALL THE JAVASCRIPT HERE --- */
+
+// GALLERY IMAGES FOR EACH SERVICE
+const galleryData = {
+  nails: [
+    "WhatsApp Image 2025-09-09 at 11.59.06_96f11685.jpg",
+    "WhatsApp Image 2025-09-09 at 12.03.28_49171d69.jpg",
+    "WhatsApp Image 2025-09-09 at 11.59.46_cb148514.jpg"
+  ],
+  
+  acrylic: [
+    "WhatsApp Image 2025-09-09 at 11.54.59_147daf43.jpg",
+    "WhatsApp Image 2025-09-09 at 11.53.22_d1a3c6c3.jpg",
+    "WhatsApp Image 2025-09-09 at 11.53.13_9a29a950.jpg"
+  ]
+};
+
+// variables
+let currentGallery = [];
+let currentIndex = 0;
+
+// open gallery
+function openGallery(type) {
+  currentGallery = galleryData[type];
+  currentIndex = 0;
+
+  document.getElementById("galleryImage").src = currentGallery[0];
+  document.getElementById("galleryModal").style.display = "block";
+}
+
+// close gallery
+document.querySelector(".close-gallery").onclick = () => {
+  document.getElementById("galleryModal").style.display = "none";
+};
+
+// next + previous
+document.querySelector(".next-img").onclick = () => {
+  currentIndex = (currentIndex + 1) % currentGallery.length;
+  document.getElementById("galleryImage").src = currentGallery[currentIndex];
+};
+
+document.querySelector(".prev-img").onclick = () => {
+  currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+  document.getElementById("galleryImage").src = currentGallery[currentIndex];
+};
+
+</script>
+</body>
+</html>
+
+</body>
+</html>
+
