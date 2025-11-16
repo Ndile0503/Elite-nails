@@ -679,7 +679,93 @@ header h2{
   margin: auto;
   padding: 20px;
 }
+/* ===========================
+   MOBILE PHONES (Under 480px)
+   =========================== */
+@media (max-width: 480px) {
+  body {
+    padding: 0 10px;
+  }
+
+  h1, h2 {
+    font-size: 28px;
+    text-align: center;
+  }
+
+  nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .service-list {
+    grid-template-columns: 1fr;
+  }
+
+  .home-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .home-image img {
+    width: 90%;
+  }
+
+  .booking button,
+  .whatsapp-btn,
+  .facebook-btn,
+  .submit-btn {
+    width: 100%;
+  }
+}
+/* ===========================
+   TABLETS (481px – 768px)
+   =========================== */
+@media (max-width: 768px) {
+  h1, h2 {
+    font-size: 36px;
+  }
+
+  nav ul {
+    gap: 22px;
+  }
+
+  .service-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .home-content {
+    flex-direction: column;
+  }
+
+  .home-image img {
+    width: 70%;
+  }
+}
+/* ===========================
+   LARGE SCREENS (769px+)
+   =========================== */
+@media (min-width: 769px) {
+  h1, h2 {
+    font-size: 48px;
+  }
+
+  .service-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .home-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .home-image img {
+    width: 400px;
+  }
+}
 
 
  
+
 
