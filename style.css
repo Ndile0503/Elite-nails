@@ -874,34 +874,37 @@ header h2{
     grid-template-columns: repeat(3, 1fr);
   }
 }
-/* Responsive videos */
-.video-container {
-  position: relative;
+/* Make the video slider responsive */
+#videoSlider {
   width: 100%;
-  max-width: 600px; /* controls how large videos get on laptops */
+  max-width: 600px; /* controls biggest size on laptops */
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.video-container video {
+#videoSlider video {
   width: 100%;
   height: auto;
-  border-radius: 15px; /* keeps the rounded design */
-  display: block;
+  border-radius: 15px;
 }
 
-/* Make videos stack nicely on mobile */
+/* On small phones */
 @media (max-width: 600px) {
-  .video-container {
+  #videoSlider {
     max-width: 100%;
+    padding: 0 10px;
   }
 
-  .video-container video {
+  #videoSlider video {
     border-radius: 12px;
   }
 }
 
 
  
+
 
 
 
