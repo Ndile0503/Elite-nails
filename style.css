@@ -874,9 +874,35 @@ header h2{
     grid-template-columns: repeat(3, 1fr);
   }
 }
+/* Responsive videos */
+.video-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px; /* controls how large videos get on laptops */
+  margin: 0 auto;
+}
+
+.video-container video {
+  width: 100%;
+  height: auto;
+  border-radius: 15px; /* keeps the rounded design */
+  display: block;
+}
+
+/* Make videos stack nicely on mobile */
+@media (max-width: 600px) {
+  .video-container {
+    max-width: 100%;
+  }
+
+  .video-container video {
+    border-radius: 12px;
+  }
+}
 
 
  
+
 
 
 
